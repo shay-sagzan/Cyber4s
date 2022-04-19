@@ -30,13 +30,13 @@ class Piece {
     } else if (this.type === ROOK) {
       relativeMoves = this.getRookRelativeMoves()
     } else if (this.type === KNIGHT) {
-      // TODO: Get moves
+      relativeMoves = this.getKnightRelativeMoves()
     } else if (this.type === BISHOP) {
-      // TODO: Get moves
+      relativeMoves = this.getBishopRelativeMoves()
     } else if (this.type === KING) {
-      // TODO: Get moves
+      relativeMoves = this.getKingRelativeMoves()
     } else if (this.type === QUEEN) {
-      // TODO: Get moves
+      relativeMoves = this.getQueenRelativeMoves()
     } else {
       console.log("Unknown type", type)
     }
@@ -70,11 +70,59 @@ class Piece {
   }
 
   getPawnRelativeMoves() {
-    // TODO: Give different answer to black player
-    return [[1, 0]]
+    let result = []
+    for (let i = 1; i < BOARD_SIZE; i++) {
+      result.push([1, 0])
+      result.push([1, 1])
+    }
+    return result
+  }
+
+  getQueenRelativeMoves() {
+    let result = []
+    for (let i = 1; i < BOARD_SIZE; i++) {
+      result.push([i, 0])
+      result.push([-i, 0])
+      result.push([0, i])
+      result.push([0, -i])
+    }
+    return result
+  }
+
+  getBishopRelativeMoves() {
+    let result = []
+    for (let i = 1; i < BOARD_SIZE; i++) {
+      result.push([i, 0])
+      result.push([-i, 0])
+      result.push([0, i])
+      result.push([0, -i])
+    }
+    return result
   }
 
   getRookRelativeMoves() {
+    let result = []
+    for (let i = 1; i < BOARD_SIZE; i++) {
+      result.push([i, 0])
+      result.push([-i, 0])
+      result.push([0, i])
+      result.push([0, -i])
+    }
+    return result
+  }
+
+  getKingRelativeMoves() {
+    let result = []
+    for (let i = 1; i < BOARD_SIZE; i++) {
+      result.push([i, 0])
+      result.push([-i, 0])
+      result.push([0, i])
+      result.push([0, -i])
+    }
+    return result
+  }
+
+  getKnightRelativeMoves() {
     let result = []
     for (let i = 1; i < BOARD_SIZE; i++) {
       result.push([i, 0])
