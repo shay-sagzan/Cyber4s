@@ -1,0 +1,25 @@
+table {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.light-cell {
+  background: rgb(211, 210, 210);
+  width: 75px;
+  height: 75px;
+}
+
+.dark-cell {
+  background: rgb(63, 63, 63);
+  width: 75px;
+  height: 75px;
+}
+
+.selected {
+  background: rgb(197, 197, 83);
+}
+
+.possible-move {
+  background: rgb(221, 142, 46);
+}
