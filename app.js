@@ -10,8 +10,8 @@ const KING = "king"
 const QUEEN = "queen"
 
 let selectedCell
-// let pieces = [];
-let boardData
+let pieces = []
+// let boardData
 let table
 
 class Piece {
@@ -50,7 +50,7 @@ class Piece {
       const absoluteCol = this.col + relativeMove[1]
       absoluteMoves.push([absoluteRow, absoluteCol])
     }
-    console.log("absoluteMoves", absoluteMoves)
+    // console.log("absoluteMoves", absoluteMoves)
 
     // Get filtered absolute moves
     let filteredMoves = []
@@ -71,10 +71,10 @@ class Piece {
   }
 
   getPawnRelativeMoves() {
+    // TODO: Give different answer to black player
     let result = []
     for (let i = 1; i < BOARD_SIZE; i++) {
       result.push([1, 0])
-      result.push([1, 1])
     }
     return result
   }
@@ -86,6 +86,10 @@ class Piece {
       result.push([-i, 0])
       result.push([0, i])
       result.push([0, -i])
+      result.push([i, -i])
+      result.push([i, i])
+      result.push([-i, i])
+      result.push([-i, -i])
     }
     return result
   }
@@ -93,10 +97,10 @@ class Piece {
   getBishopRelativeMoves() {
     let result = []
     for (let i = 1; i < BOARD_SIZE; i++) {
-      result.push([i, 0])
-      result.push([-i, 0])
-      result.push([0, i])
-      result.push([0, -i])
+      result.push([i, -i])
+      result.push([i, i])
+      result.push([-i, i])
+      result.push([-i, -i])
     }
     return result
   }
@@ -114,11 +118,12 @@ class Piece {
 
   getKingRelativeMoves() {
     let result = []
-    for (let i = 1; i < BOARD_SIZE; i++) {
-      result.push([i, 0])
-      result.push([-i, 0])
-      result.push([0, i])
-      result.push([0, -i])
+    for (let row = -1; row <= 1; row++) {
+      for (let col = -1; col <= 1; col++) {
+        if (!(row === 0 && col === 0)) {
+          result.push([row, col])
+        }
+      }
     }
     return result
   }
@@ -126,14 +131,54 @@ class Piece {
   getKnightRelativeMoves() {
     let result = []
     for (let i = 1; i < BOARD_SIZE; i++) {
-      result.push([i, 0])
-      result.push([-i, 0])
-      result.push([0, i])
-      result.push([0, -i])
+      result.push([-2, -1])
+      result.push([-1, -2])
+      result.push([1, -2])
+      result.push([2, -1])
+      result.push([2, 1])
+      result.push([1, 2])
+      result.push([-1, 2])
+      result.push([-2, 1])
     }
     return result
   }
 }
+
+// class King extends Piece {
+//   constructor(row, col, type, player) {
+//     super(row, col, type, "k", player)
+//   }
+//   calcMoves() {
+//     //top:
+//     this.checkForBlocks(this.row + 1, this.col)
+//     this.checkForBlocks(this.row + 1, this.col - 1)
+//     this.checkForBlocks(this.row + 1, this.col + 1)
+
+//     //bottom:
+//     this.checkForBlocks(this.row - 1, this.col)
+//     this.checkForBlocks(this.row - 1, this.col - 1)
+//     this.checkForBlocks(this.row - 1, this.col + 1)
+
+//     //left
+//     this.checkForBlocks(this.row, this.col - 1)
+
+//     //right
+//     this.checkForBlocks(this.row, this.col + 1)
+//   }
+
+//   checkForBlocks(row, col) {
+//     if (row < 0 || col < 0 || row > 7 || col > 7) return false
+//     const piece =
+//       blackPieces.find((p) => p.row === row && p.col === col) ||
+//       whitePieces.find((p) => p.row === row && p.col === col)
+
+//     if (!piece) this.possibleMoves.push({ row, col })
+//     else if (piece.color !== this.color)
+//       this.possibleMoves.push({ row: row, col: col, eat: piece })
+
+//     return true
+//   }
+// }
 
 class BoardData {
   constructor(pieces) {
@@ -174,18 +219,32 @@ function addImage(cell, player, name) {
 }
 
 function onCellClick(event, row, col) {
+  // console.log("row", row)
+  // console.log("col", col)
   // Clear all previous possible moves
   for (let i = 0; i < BOARD_SIZE; i++) {
     for (let j = 0; j < BOARD_SIZE; j++) {
       table.rows[i].cells[j].classList.remove("possible-move")
     }
   }
-  const piece = boardData.getPiece(row, col)
-  if (piece !== undefined) {
-    let possibleMoves = piece.getPossibleMoves()
-    for (let possibleMove of possibleMoves) {
-      const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
-      cell.classList.add("possible-move")
+  // const piece = boardData.getPiece(row, col)
+  // if (piece !== undefined) {
+  //   let possibleMoves = piece.getPossibleMoves()
+  //   for (let possibleMove of possibleMoves) {
+  //     const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
+  //     cell.classList.add("possible-move")
+  //   }
+  // }
+
+  // Show possible moves
+  for (let piece of pieces) {
+    if (piece.row === row && piece.col === col) {
+      // console.log(piece);
+      let possibleMoves = piece.getPossibleMoves()
+      for (let possibleMove of possibleMoves) {
+        const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
+        cell.classList.add("possible-move")
+      }
     }
   }
 
@@ -203,6 +262,7 @@ function createChessBoard() {
   // Create empty chess board HTML:
   table = document.createElement("table")
   document.body.appendChild(table)
+
   for (let row = 0; row < BOARD_SIZE; row++) {
     const rowElement = table.insertRow()
     for (let col = 0; col < BOARD_SIZE; col++) {
@@ -217,13 +277,29 @@ function createChessBoard() {
   }
 
   // Create list of pieces (32 total)
-  boardData = new BoardData(getInitialPieces())
+  // boardData = new BoardData(getInitialPieces())
+  pieces = getInitialPieces()
 
   // Add pieces images to board
-  for (let piece of boardData.pieces) {
+  for (let piece of pieces) {
     const cell = table.rows[piece.row].cells[piece.col]
     addImage(cell, piece.player, piece.type)
   }
+
+  const h1 = document.createElement("h1")
+  h1.innerText = "Chess-Board Game!"
+  document.body.appendChild(h1)
+  h1.classList.add("header")
+
+  const btnReset = document.createElement("button")
+  btnReset.innerText = "Reset"
+  document.body.appendChild(btnReset)
+  btnReset.classList.add("btnReset")
+
+  const btnSwitchPlayer = document.createElement("button")
+  btnSwitchPlayer.innerText = "Switch Players"
+  document.body.appendChild(btnSwitchPlayer)
+  btnSwitchPlayer.classList.add("btnSwitchPlayer")
 }
 
 window.addEventListener("load", createChessBoard)
