@@ -1,17 +1,19 @@
 table {
-  margin: 20px;
   display: flex;
   justify-content: center;
+  align-content: center;
+  border: 20px solid rgba(193, 172, 119, 0.654);
+  width: fit-content;
 }
 
 .light-cell {
-  background: rgb(211, 210, 210);
+  background: rgba(193, 172, 119, 0.654);
   width: 75px;
   height: 75px;
 }
 
 .dark-cell {
-  background: rgb(63, 63, 63);
+  background: #9d571b;
   width: 75px;
   height: 75px;
 }

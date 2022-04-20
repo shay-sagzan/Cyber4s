@@ -25,6 +25,7 @@ class Piece {
   getPossibleMoves() {
     // Get relative moves
     let relativeMoves
+    let result = []
     if (this.type === PAWN) {
       relativeMoves = this.getPawnRelativeMoves()
     } else if (this.type === ROOK) {
@@ -49,7 +50,7 @@ class Piece {
       const absoluteCol = this.col + relativeMove[1]
       absoluteMoves.push([absoluteRow, absoluteCol])
     }
-    // console.log('absoluteMoves', absoluteMoves);
+    console.log("absoluteMoves", absoluteMoves)
 
     // Get filtered absolute moves
     let filteredMoves = []
@@ -145,7 +146,6 @@ class BoardData {
 
 function getInitialPieces() {
   let result = []
-
   addFirstRowPieces(result, 0, WHITE_PLAYER)
   addFirstRowPieces(result, 7, BLACK_PLAYER)
 
@@ -174,8 +174,6 @@ function addImage(cell, player, name) {
 }
 
 function onCellClick(event, row, col) {
-  console.log("row", row)
-  console.log("col", col)
   // Clear all previous possible moves
   for (let i = 0; i < BOARD_SIZE; i++) {
     for (let j = 0; j < BOARD_SIZE; j++) {
