@@ -10,8 +10,7 @@ const KING = "king"
 const QUEEN = "queen"
 
 let selectedCell
-let pieces = []
-// let boardData
+let boardData
 let table
 
 class Piece {
@@ -72,11 +71,11 @@ class Piece {
 
   getPawnRelativeMoves() {
     // TODO: Give different answer to black player
-    let result = []
-    for (let i = 1; i < BOARD_SIZE; i++) {
-      result.push([1, 0])
+    let direction = 1
+    if (this.player === BLACK_PLAYER) {
+      direction = -1
     }
-    return result
+    return [[1 * direction, 0]]
   }
 
   getQueenRelativeMoves() {
@@ -144,49 +143,19 @@ class Piece {
   }
 }
 
-// class King extends Piece {
-//   constructor(row, col, type, player) {
-//     super(row, col, type, "k", player)
-//   }
-//   calcMoves() {
-//     //top:
-//     this.checkForBlocks(this.row + 1, this.col)
-//     this.checkForBlocks(this.row + 1, this.col - 1)
-//     this.checkForBlocks(this.row + 1, this.col + 1)
-
-//     //bottom:
-//     this.checkForBlocks(this.row - 1, this.col)
-//     this.checkForBlocks(this.row - 1, this.col - 1)
-//     this.checkForBlocks(this.row - 1, this.col + 1)
-
-//     //left
-//     this.checkForBlocks(this.row, this.col - 1)
-
-//     //right
-//     this.checkForBlocks(this.row, this.col + 1)
-//   }
-
-//   checkForBlocks(row, col) {
-//     if (row < 0 || col < 0 || row > 7 || col > 7) return false
-//     const piece =
-//       blackPieces.find((p) => p.row === row && p.col === col) ||
-//       whitePieces.find((p) => p.row === row && p.col === col)
-
-//     if (!piece) this.possibleMoves.push({ row, col })
-//     else if (piece.color !== this.color)
-//       this.possibleMoves.push({ row: row, col: col, eat: piece })
-
-//     return true
-//   }
-// }
-
 class BoardData {
   constructor(pieces) {
     this.pieces = pieces
   }
 
   // Returns piece in row, col, or undefined if not exists.
-  getPiece(row, col) {}
+  getPiece(row, col) {
+    for (const piece of this.pieces) {
+      if (piece.row === row && piece.col === col) {
+        return piece
+      }
+    }
+  }
 }
 
 function getInitialPieces() {
@@ -227,24 +196,12 @@ function onCellClick(event, row, col) {
       table.rows[i].cells[j].classList.remove("possible-move")
     }
   }
-  // const piece = boardData.getPiece(row, col)
-  // if (piece !== undefined) {
-  //   let possibleMoves = piece.getPossibleMoves()
-  //   for (let possibleMove of possibleMoves) {
-  //     const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
-  //     cell.classList.add("possible-move")
-  //   }
-  // }
-
-  // Show possible moves
-  for (let piece of pieces) {
-    if (piece.row === row && piece.col === col) {
-      // console.log(piece);
-      let possibleMoves = piece.getPossibleMoves()
-      for (let possibleMove of possibleMoves) {
-        const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
-        cell.classList.add("possible-move")
-      }
+  const piece = boardData.getPiece(row, col)
+  if (piece !== undefined) {
+    let possibleMoves = piece.getPossibleMoves()
+    for (let possibleMove of possibleMoves) {
+      const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
+      cell.classList.add("possible-move")
     }
   }
 
@@ -277,11 +234,10 @@ function createChessBoard() {
   }
 
   // Create list of pieces (32 total)
-  // boardData = new BoardData(getInitialPieces())
-  pieces = getInitialPieces()
+  boardData = new BoardData(getInitialPieces())
 
   // Add pieces images to board
-  for (let piece of pieces) {
+  for (let piece of boardData.pieces) {
     const cell = table.rows[piece.row].cells[piece.col]
     addImage(cell, piece.player, piece.type)
   }
@@ -295,6 +251,7 @@ function createChessBoard() {
   btnReset.innerText = "Reset"
   document.body.appendChild(btnReset)
   btnReset.classList.add("btnReset")
+  btnReset.addEventListener("click", (event) => getInitialPieces)
 
   const btnSwitchPlayer = document.createElement("button")
   btnSwitchPlayer.innerText = "Switch Players"
