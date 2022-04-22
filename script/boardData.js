@@ -1,3 +1,6 @@
+import { Piece } from "./Piece.js"
+import { GameManager } from "./GameManager.js"
+
 const PAWN = "pawn"
 const ROOK = "rook"
 const KNIGHT = "knight"
@@ -6,85 +9,80 @@ const KING = "king"
 const QUEEN = "queen"
 
 const BOARD_SIZE = 8
+let selectedCell
+// let pieces = [];
+let boardData
+let table
 
-class BoardData {
-  constructor() {
+export class BoardData {
+  constructor(pieces) {
+    this.pieces = pieces
     this._cells = document.getElementsByClassName("cell")
     this._active = null
-    this.initCells()
+    this.createChessBoard()
   }
 
-  get active() {
-    return this._active
-  }
+  getPiece(row, col) {}
 
-  removeActive() {
-    this._active = null
-  }
-
-  set active(newActiveChessPiece) {
-    if (!newActiveChessPiece) throw "Active needs to have a value"
-    this._active = newActiveChessPiece
-  }
-
-  removeActive() {
-    this._active = null
-  }
-
-  // Returns piece in row, col, or undefined if not exists.
-  // getPiece(row, col) {
-  //   for (const piece of this.pieces) {
-  //     if (piece.row === row && piece.col === col) {
-  //       return piece
-  //     }
-  //   }
-  // }
-
-  // getType(type) {
-  //   for (const piece of this.pieces) {
-  //     if (
-  //       this.type === KNIGHT ||
-  //       this.type === ROOK ||
-  //       this.type === KING ||
-  //       this.type === BISHOP ||
-  //       this.type === QUEEN ||
-  //       this.type === PAWN
-  //     )
-  //       console.log("work")
-  //     return type
-  //   }
-  // }
-
-  // getColor() {
-  //   for (const piece of this.pieces) {
-  //     if (typeof getPiece() === WHITE_PLAYER) {
-  //       console.log("white")
-  //       return true
-  //     } else {
-  //       console.log("piece")
-  //       return false
-  //     }
-  //   }
-  // }
-
-  initCells() {
-    for (let i = 0; i < this._cells.length; i++) {
-      const element = this._cells[i]
-      const col = i % BOARD_SIZE
-      const row = parseInt(i / BOARD_SIZE)
-      element.addEventListener("click", (e) => {
-        if (this.active) {
-          this.active.play(row, col)
-          if (gm.isCheck() === this.active.color) {
-            console.log("revert")
-            this.active.revert()
-          } else {
-            gm.turn()
-          }
-          this.active.deactivate()
-          console.log(gm)
-        }
-      })
+  onCellClick(event, row, col) {
+    console.log("row", row)
+    console.log("col", col)
+    // Clear all previous possible moves
+    for (let i = 0; i < BOARD_SIZE; i++) {
+      for (let j = 0; j < BOARD_SIZE; j++) {
+        table.rows[i].cells[j].classList.remove("possible-move")
+      }
     }
+    const piece = boardData.getPiece(row, col)
+    if (piece !== undefined) {
+      let possibleMoves = piece.getPossibleMoves()
+      for (let possibleMove of possibleMoves) {
+        const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
+        cell.classList.add("possible-move")
+      }
+    }
+
+    // Clear previously selected cell
+    if (selectedCell !== undefined) {
+      selectedCell.classList.remove("selected")
+    }
+
+    // Show selected cell
+    selectedCell = event.currentTarget
+    selectedCell.classList.add("selected")
+  }
+
+  createChessBoard() {
+    // Create empty chess board HTML:
+    table = document.createElement("table")
+    document.body.appendChild(table)
+    for (let row = 0; row < BOARD_SIZE; row++) {
+      const rowElement = table.insertRow()
+      for (let col = 0; col < BOARD_SIZE; col++) {
+        const cell = rowElement.insertCell()
+        if ((row + col) % 2 === 0) {
+          cell.className = "light-cell"
+        } else {
+          cell.className = "dark-cell"
+        }
+        cell.addEventListener("click", (event) => onCellClick(event, row, col))
+      }
+    }
+
+    const h1 = document.createElement("h1")
+    h1.innerText = "Chess-Board Game!"
+    document.body.appendChild(h1)
+    h1.classList.add("header")
+
+    const btnReset = document.createElement("button")
+    btnReset.innerText = "Reset"
+    document.body.appendChild(btnReset)
+    btnReset.classList.add("btnReset")
+    btnReset.addEventListener("click", (event) => getInitialPieces)
+
+    const btnSwitchPlayer = document.createElement("button")
+    btnSwitchPlayer.innerText = "Switch Players"
+    document.body.appendChild(btnSwitchPlayer)
+    btnSwitchPlayer.classList.add("btnSwitchPlayer")
   }
 }
