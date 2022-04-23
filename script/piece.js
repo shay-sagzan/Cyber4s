@@ -1,151 +1,189 @@
 import { GameManager } from "./GameManager.js"
 import { BoardData } from "./BoardData.js"
 
+const WHITE_PLAYER = "white"
+const BLACK_PLAYER = "black"
+
 export class Piece {
-  constructor(row, col, cell, type, player, img) {
+  constructor(row, col, color, type, img) {
     this.row = row
     this.col = col
-    this.cell = cell
+    this.color = color
     this.type = type
-    this.player = player
-    this.img = this.addImage(cell, player, name)
+    this.el = document.createElement("img")
+    this.el.src = img
     this.alive = true
     this.possibleMoves = []
     this.firstTurn = true
     this.oldCol = col
     this.oldRow = row
     this.oldPossibleMoves = [...this.possibleMoves]
-    this.el.classList.add("chess-piece")
-
-    this.el.addEventListener("click", (e) => {
-      e.stopPropagation()
-      this.click()
-    })
   }
 
-  getPossibleMoves() {
-    // Get relative moves
-    let relativeMoves
-    if (this.type === PAWN) {
-      relativeMoves = this.getPawnRelativeMoves()
-    } else if (this.type === ROOK) {
-      relativeMoves = this.getRookRelativeMoves()
-    } else if (this.type === KNIGHT) {
-      relativeMoves = this.getKnightRelativeMoves()
-    } else if (this.type === BISHOP) {
-      relativeMoves = this.getBishopRelativeMoves()
-    } else if (this.type === KING) {
-      relativeMoves = this.getKingRelativeMoves()
-    } else if (this.type === QUEEN) {
-      relativeMoves = this.getQueenRelativeMoves()
-    } else {
-      console.log("Unknown type", type)
-    }
-    console.log("relativeMoves", relativeMoves)
+  isChar() {
+    if (charData[this.row][this.col] !== undefined) {
+      return charData[this.row][this.col]
+    } else return undefined
+  }
 
-    // Get absolute moves
-    let absoluteMoves = []
-    for (let relativeMove of relativeMoves) {
-      const absoluteRow = this.row + relativeMove[0]
-      const absoluteCol = this.col + relativeMove[1]
-      absoluteMoves.push([absoluteRow, absoluteCol])
-    }
-    // console.log('absoluteMoves', absoluteMoves);
+  isClear(row, col) {
+    const char = this.isChar()
+    if (
+      row >= 0 &&
+      col >= 0 &&
+      row < 8 &&
+      col < 8 &&
+      charData[row][col] !== undefined
+    ) {
+      return false
+    } else return true
+  }
+}
 
-    // Get filtered absolute moves
-    let filteredMoves = []
-    for (let absoluteMove of absoluteMoves) {
-      const absoluteRow = absoluteMove[0]
-      const absoluteCol = absoluteMove[1]
-      if (
-        absoluteRow >= 0 &&
-        absoluteRow <= 7 &&
-        absoluteCol >= 0 &&
-        absoluteCol <= 7
-      ) {
-        filteredMoves.push(absoluteMove)
-      }
-    }
-    console.log("filteredMoves", filteredMoves)
-    return filteredMoves
+export class Pawn extends Piece {
+  constructor(row, col, color, img) {
+    super(row, col, color, "p", img)
   }
 
   getPawnRelativeMoves() {
-    let direction = 1
-    if (this.player === BLACK_PLAYER) {
-      direction = -1
+    this.possibleMoves = []
+    if (this.type === BLACK_PLAYER) {
+      let direction = -1
+      if (this.firstTurn) {
+      }
     }
-    return [[1 * direction, 0]]
   }
+}
 
+export class Queen extends Piece {
+  constructor(row, col, type, img) {
+    super(row, col, type, img)
+  }
   getQueenRelativeMoves() {
-    let result = []
-    for (let i = 1; i < BOARD_SIZE; i++) {
-      result.push([i, 0])
-      result.push([-i, 0])
-      result.push([0, i])
-      result.push([0, -i])
-      result.push([i, -i])
-      result.push([i, i])
-      result.push([-i, i])
-      result.push([-i, -i])
+    let arr = []
+    for (let i = 1; i < 8; i++) {
+      arr.push([i, i])
+      if (this.isClear(char.row + i, char.col + i) === false) break
     }
-    return result
+    for (let i = 1; i < 8; i++) {
+      arr.push([i, -i])
+      if (this.isClear(char.row + i, char.col - i) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([-i, i])
+      if (this.isClear(char.row - i, char.col + i) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([-i, -i])
+      if (this.isClear(char.row - i, char.col - i) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([i, 0])
+      if (this.isClear(char.row + i, char.col) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([0, i])
+      if (this.isClear(char.row, char.col + i) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([-i, 0])
+      if (this.isClear(char.row - i, char.col) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([0, -i])
+      if (this.isClear(char.row, char.col - i) === false) break
+    }
+    return arr
   }
+}
 
+export class Bishop extends Piece {
+  constructor(row, col, type, img) {
+    super(row, col, type, img)
+  }
   getBishopRelativeMoves() {
-    let result = []
-    for (let i = 1; i < BOARD_SIZE; i++) {
-      result.push([i, -i])
-      result.push([i, i])
-      result.push([-i, i])
-      result.push([-i, -i])
+    let arr = []
+    for (let i = 1; i < 8; i++) {
+      arr.push([i, i])
+      if (this.isClear(char.row + i, char.col + i) === false) break
     }
-    return result
+    for (let i = 1; i < 8; i++) {
+      arr.push([i, -i])
+      if (this.isClear(char.row + i, char.col - i) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([-i, i])
+      if (this.isClear(char.row - i, char.col + i) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([-i, -i])
+      if (this.isClear(char.row - i, char.col - i) === false) break
+    }
+    return arr
+  }
+}
+
+export class Rook extends Piece {
+  constructor(row, col, type, img) {
+    super(row, col, type, img)
   }
 
   getRookRelativeMoves() {
-    let result = []
-    for (let i = 1; i < BOARD_SIZE; i++) {
-      result.push([i, 0])
-      result.push([-i, 0])
-      result.push([0, i])
-      result.push([0, -i])
+    let arr = []
+    for (let i = 1; i < 8; i++) {
+      arr.push([i, 0])
+      if (this.isClear(char.row + i, char.col) === false) break
     }
-    return result
+    for (let i = 1; i < 8; i++) {
+      arr.push([0, i])
+      if (this.isClear(char.row, char.col + i) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([-i, 0])
+      if (this.isClear(char.row - i, char.col) === false) break
+    }
+    for (let i = 1; i < 8; i++) {
+      arr.push([0, -i])
+      if (this.isClear(char.row, char.col - i) === false) break
+    }
+    return arr
+  }
+}
+
+export class King extends Piece {
+  constructor(row, col, type, img) {
+    super(row, col, type, img)
   }
 
   getKingRelativeMoves() {
-    let result = []
+    let arr = []
     for (let row = -1; row <= 1; row++) {
       for (let col = -1; col <= 1; col++) {
         if (!(row === 0 && col === 0)) {
-          result.push([row, col])
+          arr.push([row, col])
         }
       }
     }
-    return result
+    return arr
   }
+}
 
+export class Knight extends Piece {
+  constructor(row, col, type, img) {
+    super(row, col, type, img)
+  }
   getKnightRelativeMoves() {
-    let result = []
+    let arr = []
     for (let i = 1; i < BOARD_SIZE; i++) {
-      result.push([-2, -1])
-      result.push([-1, -2])
-      result.push([1, -2])
-      result.push([2, -1])
-      result.push([2, 1])
-      result.push([1, 2])
-      result.push([-1, 2])
-      result.push([-2, 1])
+      arr.push([-2, -1])
+      arr.push([-1, -2])
+      arr.push([1, -2])
+      arr.push([2, -1])
+      arr.push([2, 1])
+      arr.push([1, 2])
+      arr.push([-1, 2])
+      arr.push([-2, 1])
     }
-    return result
-  }
-
-  addImage(cell, player, name) {
-    const image = document.createElement("img")
-    image.src = "../images/" + player + "/" + name + ".png"
-    cell.appendChild(image)
-    image.setAttribute("id", "chess-piece")
+    return arr
   }
 }

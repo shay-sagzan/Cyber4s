@@ -1,8 +1,15 @@
-import { Piece } from "./Piece.js"
+import { King, Knight, Pawn, Piece, Rook, Bishop, Queen } from "./Piece.js"
 import { BoardData } from "./BoardData.js"
 
 const WHITE_PLAYER = "white"
 const BLACK_PLAYER = "black"
+
+const PAWN = "pawn"
+const ROOK = "rook"
+const KNIGHT = "knight"
+const BISHOP = "bishop"
+const KING = "king"
+const QUEEN = "queen"
 
 export class GameManager {
   constructor() {
@@ -36,13 +43,11 @@ export class GameManager {
     this.blackPieces.push(
       new Rook(7, 0, BLACK_PLAYER, "../images/black/rook.png")
     )
-
     for (let i = 0; i < 8; i++) {
       this.blackPieces.push(
         new Pawn(6, i, BLACK_PLAYER, "../images/black/pawn.png")
       )
     }
-
     this.whitePieces.push(
       new Rook(0, 7, WHITE_PLAYER, "../images/white/rook.png")
     )
@@ -67,7 +72,6 @@ export class GameManager {
     this.whitePieces.push(
       new Rook(0, 0, WHITE_PLAYER, "../images/white/rook.png")
     )
-
     for (let i = 0; i < 8; i++) {
       this.whitePieces.push(
         new Pawn(1, i, WHITE_PLAYER, "../images/white/pawn.png")

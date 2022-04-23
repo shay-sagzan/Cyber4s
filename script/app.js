@@ -1,12 +1,9 @@
-import { InitGame } from "./Init.js"
-import { BoardData } from "./BoardData.js"
+import { BoardData } from "./boardData.js"
 import { Piece } from "./Piece.js"
 import { GameManager } from "./GameManager.js"
 
-const BOARD_SIZE = 8
+const boardData = new BoardData()
+const newMoves = new Piece()
+const game = new GameManager()
 
-const newBoardData = new BoardData()
-const newInitGame = new InitGame()
-const newPieces = new Piece()
-
-// window.addEventListener("load", createChessBoard)
+// window.addEventListener("load", createChessBoard())

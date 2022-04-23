@@ -1,5 +1,5 @@
-import { Piece } from "./Piece.js"
 import { GameManager } from "./GameManager.js"
+import { King, Knight, Pawn, Piece, Rook } from "./Piece.js"
 
 const PAWN = "pawn"
 const ROOK = "rook"
@@ -10,19 +10,70 @@ const QUEEN = "queen"
 
 const BOARD_SIZE = 8
 let selectedCell
-// let pieces = [];
-let boardData
 let table
 
 export class BoardData {
   constructor(pieces) {
     this.pieces = pieces
     this._cells = document.getElementsByClassName("cell")
-    this._active = null
     this.createChessBoard()
   }
 
-  getPiece(row, col) {}
+  getCell(index) {
+    return this._cells[index]
+  }
+
+  getCell(row, col) {
+    let index = row * 8 + col
+    return this._cells[index]
+  }
+
+  getPossibleMoves() {
+    // Get relative moves
+    let relativeMoves
+    if (this.type === PAWN) {
+      relativeMoves = this.getPawnRelativeMoves()
+    } else if (this.type === ROOK) {
+      relativeMoves = this.getRookRelativeMoves()
+    } else if (this.type === KNIGHT) {
+      relativeMoves = this.getKnightRelativeMoves()
+    } else if (this.type === BISHOP) {
+      relativeMoves = this.getBishopRelativeMoves()
+    } else if (this.type === KING) {
+      relativeMoves = this.getKingRelativeMoves()
+    } else if (this.type === QUEEN) {
+      relativeMoves = this.getQueenRelativeMoves()
+    } else {
+      console.log("Unknown type", type)
+    }
+    console.log("relativeMoves", relativeMoves)
+
+    // Get absolute moves
+    let absoluteMoves = []
+    for (let relativeMove of relativeMoves) {
+      const absoluteRow = this.row + relativeMove[0]
+      const absoluteCol = this.col + relativeMove[1]
+      absoluteMoves.push([absoluteRow, absoluteCol])
+    }
+    // console.log('absoluteMoves', absoluteMoves);
+
+    // Get filtered absolute moves
+    let filteredMoves = []
+    for (let absoluteMove of absoluteMoves) {
+      const absoluteRow = absoluteMove[0]
+      const absoluteCol = absoluteMove[1]
+      if (
+        absoluteRow >= 0 &&
+        absoluteRow <= 7 &&
+        absoluteCol >= 0 &&
+        absoluteCol <= 7
+      ) {
+        filteredMoves.push(absoluteMove)
+      }
+    }
+    console.log("filteredMoves", filteredMoves)
+    return filteredMoves
+  }
 
   onCellClick(event, row, col) {
     console.log("row", row)
@@ -60,12 +111,16 @@ export class BoardData {
       const rowElement = table.insertRow()
       for (let col = 0; col < BOARD_SIZE; col++) {
         const cell = rowElement.insertCell()
+        rowElement.appendChild(cell)
+        cell.id = "cell-" + row.toString() + "_" + col.toString()
         if ((row + col) % 2 === 0) {
           cell.className = "light-cell"
         } else {
           cell.className = "dark-cell"
         }
-        cell.addEventListener("click", (event) => onCellClick(event, row, col))
+        cell.addEventListener("click", (event) =>
+          this.onCellClick(event, row, col)
+        )
       }
     }
 
