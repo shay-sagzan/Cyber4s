@@ -1,14 +1,9 @@
 import { BoardData } from "./BoardData.js"
+import { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN } from "./BoardData.js"
+import { GameManager } from "./GameManager.js"
 
 const WHITE_PLAYER = "white"
 const BLACK_PLAYER = "black"
-
-const PAWN = "pawn"
-const ROOK = "rook"
-const KNIGHT = "knight"
-const BISHOP = "bishop"
-const KING = "king"
-const QUEEN = "queen"
 
 export class Piece {
   constructor(row, col, color, type, src) {
@@ -16,12 +11,10 @@ export class Piece {
     this.col = col
     this.type = type
     this.color = color
-    this.alive = true
     this.possibleMoves = []
     this.firstTurn = true
     this.oldCol = col
     this.oldRow = row
-    this.oldPossibleMoves = [...this.possibleMoves]
 
     const createImg = (src) => {
       const img = document.createElement("img")

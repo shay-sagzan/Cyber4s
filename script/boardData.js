@@ -42,8 +42,8 @@ export class BoardData {
         table.rows[i].cells[j].classList.remove("possible-move")
       }
     }
-    const el = this.getPiece(row, col)
-    if (el.type !== undefined) {
+    const el = this.getPiece(row, col).type
+    if (el !== undefined) {
       for (let possibleMove of this.getPossibleMoves(el)) {
         const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
         cell.classList.add("possible-move")
@@ -142,7 +142,7 @@ export class BoardData {
     btnReset.innerText = "Reset"
     document.body.appendChild(btnReset)
     btnReset.classList.add("btnReset")
-    btnReset.addEventListener("click", (event) => getInitialPieces)
+    btnReset.addEventListener("click", () => getInitialPieces)
 
     const btnSwitchPlayer = document.createElement("button")
     btnSwitchPlayer.innerText = "Switch Players"
