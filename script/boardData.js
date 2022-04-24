@@ -1,5 +1,5 @@
+import { King, Knight, Pawn, Piece, Rook, Bishop, Queen } from "./Piece.js"
 import { GameManager } from "./GameManager.js"
-import { King, Knight, Pawn, Piece, Rook, Bishop } from "./Piece.js"
 
 export const PAWN = "pawn"
 export const ROOK = "rook"
@@ -35,16 +35,16 @@ export class BoardData {
   }
 
   onCellClick(e, row, col) {
-    console.log("row" + row)
-    console.log("col" + col)
+    // console.log("row" + row)
+    // console.log("col" + col)
     for (let i = 0; i < BOARD_SIZE; i++) {
       for (let j = 0; j < BOARD_SIZE; j++) {
         table.rows[i].cells[j].classList.remove("possible-move")
       }
     }
-    const el = this.getPiece(row, col).type
-    if (el !== undefined) {
-      for (let possibleMove of el.getPossibleMoves()) {
+    const el = this.getPiece(row, col)
+    if (el.type !== undefined) {
+      for (let possibleMove of this.getPossibleMoves(el)) {
         const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
         cell.classList.add("possible-move")
       }
@@ -58,6 +58,53 @@ export class BoardData {
     // Show selected cell
     selectedCell = e.currentTarget
     selectedCell.classList.add("selected")
+  }
+
+  getPossibleMoves(piece) {
+    // Get relative moves
+    let relativeMoves = []
+    if (piece.type === PAWN) {
+      relativeMoves = getPawnRelativeMoves()
+    } else if (piece.type === ROOK) {
+      relativeMoves = getRookRelativeMoves()
+    } else if (piece.type === KNIGHT) {
+      relativeMoves = getKnightRelativeMoves()
+    } else if (piece.type === BISHOP) {
+      relativeMoves = getBishopRelativeMoves()
+    } else if (piece.type === KING) {
+      relativeMoves = getKingRelativeMoves()
+    } else if (piece.type === QUEEN) {
+      relativeMoves = getQueenRelativeMoves()
+    } else {
+      console.log("Unknown type", piece.type)
+    }
+    console.log("relativeMoves", relativeMoves)
+
+    // Get absolute moves
+    let absoluteMoves = []
+    for (let relativeMove of relativeMoves) {
+      const absoluteRow = this.row + relativeMove[0]
+      const absoluteCol = this.col + relativeMove[1]
+      absoluteMoves.push([absoluteRow, absoluteCol])
+    }
+    // console.log('absoluteMoves', absoluteMoves);
+
+    // Get filtered absolute moves
+    let filteredMoves = []
+    for (let absoluteMove of absoluteMoves) {
+      const absoluteRow = absoluteMove[0]
+      const absoluteCol = absoluteMove[1]
+      if (
+        absoluteRow >= 0 &&
+        absoluteRow <= 7 &&
+        absoluteCol >= 0 &&
+        absoluteCol <= 7
+      ) {
+        filteredMoves.push(absoluteMove)
+      }
+    }
+    console.log("filteredMoves", filteredMoves)
+    return filteredMoves
   }
 
   createChessBoard() {
