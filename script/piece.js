@@ -1,5 +1,5 @@
-import { BoardData } from "./BoardData.js"
-import { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN } from "./BoardData.js"
+import { Table } from "./Table.js"
+import { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN } from "./Table.js"
 import { GameManager } from "./GameManager.js"
 
 const WHITE_PLAYER = "white"
@@ -24,7 +24,7 @@ export class Piece {
     this.el = createImg(src)
   }
 
-  isClear(row, col) {
+  isEmpty(row, col) {
     const char = this.isChar()
     if (
       row >= 0 &&
@@ -72,35 +72,35 @@ export class Queen extends Piece {
     let arr = []
     for (let i = 1; i < 8; i++) {
       arr.push([i, i])
-      if (this.isClear(char.row + i, char.col + i) === false) break
+      if (this.isEmpty(char.row + i, char.col + i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([i, -i])
-      if (this.isClear(char.row + i, char.col - i) === false) break
+      if (this.isEmpty(char.row + i, char.col - i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([-i, i])
-      if (this.isClear(char.row - i, char.col + i) === false) break
+      if (this.isEmpty(char.row - i, char.col + i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([-i, -i])
-      if (this.isClear(char.row - i, char.col - i) === false) break
+      if (this.isEmpty(char.row - i, char.col - i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([i, 0])
-      if (this.isClear(char.row + i, char.col) === false) break
+      if (this.isEmpty(char.row + i, char.col) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([0, i])
-      if (this.isClear(char.row, char.col + i) === false) break
+      if (this.isEmpty(char.row, char.col + i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([-i, 0])
-      if (this.isClear(char.row - i, char.col) === false) break
+      if (this.isEmpty(char.row - i, char.col) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([0, -i])
-      if (this.isClear(char.row, char.col - i) === false) break
+      if (this.isEmpty(char.row, char.col - i) === false) break
     }
     return arr
   }
@@ -114,19 +114,19 @@ export class Bishop extends Piece {
     let arr = []
     for (let i = 1; i < 8; i++) {
       arr.push([i, i])
-      if (this.isClear(char.row + i, char.col + i) === false) break
+      if (this.isEmpty(char.row + i, char.col + i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([i, -i])
-      if (this.isClear(char.row + i, char.col - i) === false) break
+      if (this.isEmpty(char.row + i, char.col - i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([-i, i])
-      if (this.isClear(char.row - i, char.col + i) === false) break
+      if (this.isEmpty(char.row - i, char.col + i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([-i, -i])
-      if (this.isClear(char.row - i, char.col - i) === false) break
+      if (this.isEmpty(char.row - i, char.col - i) === false) break
     }
     return arr
   }
@@ -141,19 +141,19 @@ export class Rook extends Piece {
     let arr = []
     for (let i = 1; i < 8; i++) {
       arr.push([i, 0])
-      if (this.isClear(char.row + i, char.col) === false) break
+      if (this.isEmpty(char.row + i, char.col) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([0, i])
-      if (this.isClear(char.row, char.col + i) === false) break
+      if (this.isEmpty(char.row, char.col + i) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([-i, 0])
-      if (this.isClear(char.row - i, char.col) === false) break
+      if (this.isEmpty(char.row - i, char.col) === false) break
     }
     for (let i = 1; i < 8; i++) {
       arr.push([0, -i])
-      if (this.isClear(char.row, char.col - i) === false) break
+      if (this.isEmpty(char.row, char.col - i) === false) break
     }
     return arr
   }

@@ -1,6 +1,6 @@
 import { King, Knight, Pawn, Piece, Rook, Bishop, Queen } from "./Piece.js"
-import { BoardData } from "./BoardData.js"
-import { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN } from "./BoardData.js"
+import { Table } from "./Table.js"
+import { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN } from "./Table.js"
 
 const WHITE_PLAYER = "white"
 const BLACK_PLAYER = "black"

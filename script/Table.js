@@ -12,7 +12,7 @@ const BOARD_SIZE = 8
 let table
 let selectedCell
 
-export class BoardData {
+export class Table {
   constructor(pieces) {
     this.pieces = pieces
     this._cells = document.getElementsByClassName("cell")
