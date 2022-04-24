@@ -1,12 +1,12 @@
 import { GameManager } from "./GameManager.js"
 import { King, Knight, Pawn, Piece, Rook } from "./Piece.js"
 
-const PAWN = "pawn"
-const ROOK = "rook"
-const KNIGHT = "knight"
-const BISHOP = "bishop"
-const KING = "king"
-const QUEEN = "queen"
+export const PAWN = "pawn"
+export const ROOK = "rook"
+export const KNIGHT = "knight"
+export const BISHOP = "bishop"
+export const KING = "king"
+export const QUEEN = "queen"
 
 const BOARD_SIZE = 8
 let selectedCell
@@ -18,7 +18,11 @@ export class BoardData {
     this._cells = document.getElementsByClassName("cell")
     this.createChessBoard()
   }
-
+  getPiece(row, col) {
+    return this.pieces.find((el) => {
+      if (el.row === row && el.col === col) return el
+    })
+  }
   getCell(index) {
     return this._cells[index]
   }
@@ -28,23 +32,23 @@ export class BoardData {
     return this._cells[index]
   }
 
-  getPossibleMoves() {
+  getPossibleMoves(piece) {
     // Get relative moves
-    let relativeMoves
-    if (this.type === PAWN) {
+    let relativeMoves = []
+    if (piece.type === PAWN) {
       relativeMoves = this.getPawnRelativeMoves()
-    } else if (this.type === ROOK) {
+    } else if (piece.type === ROOK) {
       relativeMoves = this.getRookRelativeMoves()
-    } else if (this.type === KNIGHT) {
+    } else if (piece.type === KNIGHT) {
       relativeMoves = this.getKnightRelativeMoves()
-    } else if (this.type === BISHOP) {
+    } else if (piece.type === BISHOP) {
       relativeMoves = this.getBishopRelativeMoves()
-    } else if (this.type === KING) {
+    } else if (piece.type === KING) {
       relativeMoves = this.getKingRelativeMoves()
-    } else if (this.type === QUEEN) {
+    } else if (piece.type === QUEEN) {
       relativeMoves = this.getQueenRelativeMoves()
     } else {
-      console.log("Unknown type", type)
+      console.log("Unknown type", piece.type)
     }
     console.log("relativeMoves", relativeMoves)
 
@@ -84,9 +88,10 @@ export class BoardData {
         table.rows[i].cells[j].classList.remove("possible-move")
       }
     }
-    const piece = boardData.getPiece(row, col)
+    //I created for you the getPiece method in line 21
+    const piece = this.getPiece(row, col)
     if (piece !== undefined) {
-      let possibleMoves = piece.getPossibleMoves()
+      let possibleMoves = this.getPossibleMoves(piece)
       for (let possibleMove of possibleMoves) {
         const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
         cell.classList.add("possible-move")
@@ -118,6 +123,12 @@ export class BoardData {
         } else {
           cell.className = "dark-cell"
         }
+
+        console.log(this.getPiece(row, col))
+        // I call the getPiece method to find the piece and create
+        // in the cur place
+        if (this.getPiece(row, col))
+          cell.appendChild(this.getPiece(row, col).el)
         cell.addEventListener("click", (event) =>
           this.onCellClick(event, row, col)
         )

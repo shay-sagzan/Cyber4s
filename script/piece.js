@@ -5,19 +5,24 @@ const WHITE_PLAYER = "white"
 const BLACK_PLAYER = "black"
 
 export class Piece {
-  constructor(row, col, color, type, img) {
+  constructor(row, col, color, type, src) {
     this.row = row
     this.col = col
-    this.color = color
     this.type = type
-    this.el = document.createElement("img")
-    this.el.src = img
+    this.color = color
     this.alive = true
     this.possibleMoves = []
     this.firstTurn = true
     this.oldCol = col
     this.oldRow = row
     this.oldPossibleMoves = [...this.possibleMoves]
+
+    const createImg = (src) => {
+      const img = document.createElement("img")
+      img.src = src
+      return img
+    }
+    this.el = createImg(src)
   }
 
   isChar() {
@@ -41,8 +46,8 @@ export class Piece {
 }
 
 export class Pawn extends Piece {
-  constructor(row, col, color, img) {
-    super(row, col, color, "p", img)
+  constructor(row, col, color, type, src) {
+    super(row, col, color, type, src)
   }
 
   getPawnRelativeMoves() {
@@ -56,8 +61,8 @@ export class Pawn extends Piece {
 }
 
 export class Queen extends Piece {
-  constructor(row, col, type, img) {
-    super(row, col, type, img)
+  constructor(row, col, color, type, src) {
+    super(row, col, color, type, src)
   }
   getQueenRelativeMoves() {
     let arr = []
@@ -98,8 +103,8 @@ export class Queen extends Piece {
 }
 
 export class Bishop extends Piece {
-  constructor(row, col, type, img) {
-    super(row, col, type, img)
+  constructor(row, col, color, type, src) {
+    super(row, col, color, type, src)
   }
   getBishopRelativeMoves() {
     let arr = []
@@ -124,8 +129,8 @@ export class Bishop extends Piece {
 }
 
 export class Rook extends Piece {
-  constructor(row, col, type, img) {
-    super(row, col, type, img)
+  constructor(row, col, color, type, src) {
+    super(row, col, color, type, src)
   }
 
   getRookRelativeMoves() {
@@ -151,8 +156,8 @@ export class Rook extends Piece {
 }
 
 export class King extends Piece {
-  constructor(row, col, type, img) {
-    super(row, col, type, img)
+  constructor(row, col, color, type, src) {
+    super(row, col, color, type, src)
   }
 
   getKingRelativeMoves() {
@@ -169,8 +174,8 @@ export class King extends Piece {
 }
 
 export class Knight extends Piece {
-  constructor(row, col, type, img) {
-    super(row, col, type, img)
+  constructor(row, col, color, type, src) {
+    super(row, col, color, type, src)
   }
   getKnightRelativeMoves() {
     let arr = []
