@@ -4,6 +4,13 @@ import { BoardData } from "./BoardData.js"
 const WHITE_PLAYER = "white"
 const BLACK_PLAYER = "black"
 
+const PAWN = "pawn"
+const ROOK = "rook"
+const KNIGHT = "knight"
+const BISHOP = "bishop"
+const KING = "king"
+const QUEEN = "queen"
+
 export class Piece {
   constructor(row, col, color, type, src) {
     this.row = row
@@ -25,12 +32,6 @@ export class Piece {
     this.el = createImg(src)
   }
 
-  isChar() {
-    if (charData[this.row][this.col] !== undefined) {
-      return charData[this.row][this.col]
-    } else return undefined
-  }
-
   isClear(row, col) {
     const char = this.isChar()
     if (
@@ -42,6 +43,53 @@ export class Piece {
     ) {
       return false
     } else return true
+  }
+
+  getPossibleMoves(piece) {
+    // Get relative moves
+    let relativeMoves = []
+    if (piece.type === PAWN) {
+      relativeMoves = this.getPawnRelativeMoves()
+    } else if (piece.type === ROOK) {
+      relativeMoves = this.getRookRelativeMoves()
+    } else if (piece.type === KNIGHT) {
+      relativeMoves = this.getKnightRelativeMoves()
+    } else if (piece.type === BISHOP) {
+      relativeMoves = this.getBishopRelativeMoves()
+    } else if (piece.type === KING) {
+      relativeMoves = this.getKingRelativeMoves()
+    } else if (piece.type === QUEEN) {
+      relativeMoves = this.getQueenRelativeMoves()
+    } else {
+      console.log("Unknown type", piece.type)
+    }
+    console.log("relativeMoves", relativeMoves)
+
+    // Get absolute moves
+    let absoluteMoves = []
+    for (let relativeMove of relativeMoves) {
+      const absoluteRow = this.row + relativeMove[0]
+      const absoluteCol = this.col + relativeMove[1]
+      absoluteMoves.push([absoluteRow, absoluteCol])
+    }
+    // console.log('absoluteMoves', absoluteMoves);
+
+    // Get filtered absolute moves
+    let filteredMoves = []
+    for (let absoluteMove of absoluteMoves) {
+      const absoluteRow = absoluteMove[0]
+      const absoluteCol = absoluteMove[1]
+      if (
+        absoluteRow >= 0 &&
+        absoluteRow <= 7 &&
+        absoluteCol >= 0 &&
+        absoluteCol <= 7
+      ) {
+        filteredMoves.push(absoluteMove)
+      }
+    }
+    console.log("filteredMoves", filteredMoves)
+    return filteredMoves
   }
 }
 

@@ -1,5 +1,5 @@
 import { GameManager } from "./GameManager.js"
-import { King, Knight, Pawn, Piece, Rook } from "./Piece.js"
+import { King, Knight, Pawn, Piece, Rook, Bishop } from "./Piece.js"
 
 export const PAWN = "pawn"
 export const ROOK = "rook"
@@ -9,8 +9,8 @@ export const KING = "king"
 export const QUEEN = "queen"
 
 const BOARD_SIZE = 8
-let selectedCell
 let table
+let selectedCell
 
 export class BoardData {
   constructor(pieces) {
@@ -18,11 +18,13 @@ export class BoardData {
     this._cells = document.getElementsByClassName("cell")
     this.createChessBoard()
   }
+
   getPiece(row, col) {
     return this.pieces.find((el) => {
       if (el.row === row && el.col === col) return el
     })
   }
+
   getCell(index) {
     return this._cells[index]
   }
@@ -32,67 +34,17 @@ export class BoardData {
     return this._cells[index]
   }
 
-  getPossibleMoves(piece) {
-    // Get relative moves
-    let relativeMoves = []
-    if (piece.type === PAWN) {
-      relativeMoves = this.getPawnRelativeMoves()
-    } else if (piece.type === ROOK) {
-      relativeMoves = this.getRookRelativeMoves()
-    } else if (piece.type === KNIGHT) {
-      relativeMoves = this.getKnightRelativeMoves()
-    } else if (piece.type === BISHOP) {
-      relativeMoves = this.getBishopRelativeMoves()
-    } else if (piece.type === KING) {
-      relativeMoves = this.getKingRelativeMoves()
-    } else if (piece.type === QUEEN) {
-      relativeMoves = this.getQueenRelativeMoves()
-    } else {
-      console.log("Unknown type", piece.type)
-    }
-    console.log("relativeMoves", relativeMoves)
-
-    // Get absolute moves
-    let absoluteMoves = []
-    for (let relativeMove of relativeMoves) {
-      const absoluteRow = this.row + relativeMove[0]
-      const absoluteCol = this.col + relativeMove[1]
-      absoluteMoves.push([absoluteRow, absoluteCol])
-    }
-    // console.log('absoluteMoves', absoluteMoves);
-
-    // Get filtered absolute moves
-    let filteredMoves = []
-    for (let absoluteMove of absoluteMoves) {
-      const absoluteRow = absoluteMove[0]
-      const absoluteCol = absoluteMove[1]
-      if (
-        absoluteRow >= 0 &&
-        absoluteRow <= 7 &&
-        absoluteCol >= 0 &&
-        absoluteCol <= 7
-      ) {
-        filteredMoves.push(absoluteMove)
-      }
-    }
-    console.log("filteredMoves", filteredMoves)
-    return filteredMoves
-  }
-
-  onCellClick(event, row, col) {
-    console.log("row", row)
-    console.log("col", col)
-    // Clear all previous possible moves
+  onCellClick(e, row, col) {
+    console.log("row" + row)
+    console.log("col" + col)
     for (let i = 0; i < BOARD_SIZE; i++) {
       for (let j = 0; j < BOARD_SIZE; j++) {
         table.rows[i].cells[j].classList.remove("possible-move")
       }
     }
-    //I created for you the getPiece method in line 21
-    const piece = this.getPiece(row, col)
-    if (piece !== undefined) {
-      let possibleMoves = this.getPossibleMoves(piece)
-      for (let possibleMove of possibleMoves) {
+    const el = this.getPiece(row, col).type
+    if (el !== undefined) {
+      for (let possibleMove of el.getPossibleMoves()) {
         const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
         cell.classList.add("possible-move")
       }
@@ -104,7 +56,7 @@ export class BoardData {
     }
 
     // Show selected cell
-    selectedCell = event.currentTarget
+    selectedCell = e.currentTarget
     selectedCell.classList.add("selected")
   }
 
@@ -129,9 +81,8 @@ export class BoardData {
         // in the cur place
         if (this.getPiece(row, col))
           cell.appendChild(this.getPiece(row, col).el)
-        cell.addEventListener("click", (event) =>
-          this.onCellClick(event, row, col)
-        )
+
+        cell.addEventListener("click", (e) => this.onCellClick(e, row, col))
       }
     }
 
