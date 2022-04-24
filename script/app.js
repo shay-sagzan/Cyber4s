@@ -1,5 +1,5 @@
-import { BoardData } from "./boardData.js"
-import { Piece } from "./Piece.js"
+import { BoardData } from "./BoardData.js"
+import { King, Knight, Pawn, Piece, Rook, Bishop, Queen } from "./Piece.js"
 import { GameManager } from "./GameManager.js"
 
 const newMoves = new Piece()
