@@ -44,9 +44,37 @@ export class BoardData {
     return this.getPiece(row, col) === undefined
   }
 
-  isPlayer(row, col, player) {
+  isPlayer(row, col, color) {
     const piece = this.getPiece(row, col)
-    return piece !== undefined && piece.player === player
+    return piece !== undefined && piece.color === color
+  }
+
+  onCellClick(event, row, col) {
+    // Clear all previous possible moves
+    for (let i = 0; i < BOARD_SIZE; i++) {
+      for (let j = 0; j < BOARD_SIZE; j++) {
+        table.rows[i].cells[j].classList.remove("possible-move")
+      }
+    }
+
+    // Show possible moves
+    const piece = this.getPiece(row, col)
+    if (piece !== undefined) {
+      let possibleMoves = piece.getPossibleMoves(boardData)
+      for (let possibleMove of possibleMoves) {
+        const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
+        cell.classList.add("possible-move")
+      }
+    }
+
+    // Clear previously selected cell
+    if (selectedCell !== undefined) {
+      selectedCell.classList.remove("selected")
+    }
+
+    // Show selected cell
+    selectedCell = event.currentTarget
+    selectedCell.classList.add("selected")
   }
 
   createChessBoard() {
@@ -85,34 +113,6 @@ export class BoardData {
     btnSwitchPlayer.innerText = "Switch Players"
     document.body.appendChild(btnSwitchPlayer)
     btnSwitchPlayer.classList.add("btnSwitchPlayer")
-  }
-
-  onCellClick(event, row, col) {
-    // Clear all previous possible moves
-    for (let i = 0; i < BOARD_SIZE; i++) {
-      for (let j = 0; j < BOARD_SIZE; j++) {
-        table.rows[i].cells[j].classList.remove("possible-move")
-      }
-    }
-
-    // Show possible moves
-    const piece = this.getPiece(row, col)
-    if (piece !== undefined) {
-      let possibleMoves = piece.getPossibleMoves(boardData)
-      for (let possibleMove of possibleMoves) {
-        const cell = table.rows[possibleMove[0]].cells[possibleMove[1]]
-        cell.classList.add("possible-move")
-      }
-    }
-
-    // Clear previously selected cell
-    if (selectedCell !== undefined) {
-      selectedCell.classList.remove("selected")
-    }
-
-    // Show selected cell
-    selectedCell = event.currentTarget
-    selectedCell.classList.add("selected")
   }
 }
 

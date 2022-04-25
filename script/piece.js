@@ -25,7 +25,7 @@ export class Piece {
   }
 
   getOpponent() {
-    if (this.player === WHITE_PLAYER) {
+    if (this.color === WHITE_PLAYER) {
       return BLACK_PLAYER
     }
     return WHITE_PLAYER
@@ -66,6 +66,57 @@ export class Piece {
     }
     return filteredMoves
   }
+
+  getMovesInDirection(directionRow, directionCol, boardData) {
+    this.possibleMoves
+    for (let i = 1; i < BOARD_SIZE; i++) {
+      let row = this.row + directionRow * i
+      let col = this.col + directionCol * i
+      if (boardData.isEmpty(row, col)) {
+        this.possibleMoves.push([row, col])
+      } else if (boardData.isPlayer(row, col, this.getOpponent())) {
+        this.possibleMoves.push([row, col])
+        return this.possibleMoves
+      } else if (boardData.isPlayer(row, col, this.color)) {
+        return this.possibleMoves
+      }
+    }
+    return this.possibleMoves
+  }
+
+  BishopMoves(boardData) {
+    this.possibleMoves = []
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-1, -1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-1, 1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(1, -1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(1, 1, boardData)
+    )
+    return this.possibleMoves
+  }
+
+  RookMoves(boardData) {
+    this.possibleMoves = []
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-1, 0, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(1, 0, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(0, -1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(0, 1, boardData)
+    )
+    return this.possibleMoves
+  }
 }
 
 export class Pawn extends Piece {
@@ -76,7 +127,7 @@ export class Pawn extends Piece {
   getPawnMoves(boardData) {
     this.possibleMoves = []
     let direction = 1
-    if (this.player === BLACK_PLAYER) {
+    if (this.color === BLACK_PLAYER) {
       direction = -1
     }
 
@@ -104,8 +155,8 @@ export class Queen extends Piece {
     super(row, col, color, type, src)
   }
   getQueenMoves(boardData) {
-    this.possibleMoves = this.getBishopMoves(boardData)
-    this.possibleMoves = this.possibleMoves.concat(this.getRookMoves(boardData))
+    this.possibleMoves = this.BishopMoves(boardData)
+    this.possibleMoves = this.possibleMoves.concat(this.RookMoves(boardData))
     return this.possibleMoves
   }
 }
@@ -116,19 +167,7 @@ export class Bishop extends Piece {
   }
   getBishopMoves(boardData) {
     this.possibleMoves = []
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(-1, -1, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(-1, 1, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(1, -1, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(1, 1, boardData)
-    )
-    return this.possibleMoves
+    return this.BishopMoves(boardData)
   }
 }
 
@@ -139,39 +178,7 @@ export class Rook extends Piece {
 
   getRookMoves(boardData) {
     this.possibleMoves = []
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(-1, 0, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(1, 0, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(0, -1, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(0, 1, boardData)
-    )
-    return this.possibleMoves
-  }
-
-  getMovesInDirection(directionRow, directionCol, boardData) {
-    this.possibleMoves
-    for (let i = 1; i < BOARD_SIZE; i++) {
-      let row = this.row + directionRow * i
-      let col = this.col + directionCol * i
-      if (boardData.isEmpty(row, col)) {
-        this.possibleMoves.push([row, col])
-      } else if (boardData.isPlayer(row, col, this.getOpponent())) {
-        this.possibleMoves.push([row, col])
-        console.log("opponent")
-        return this.possibleMoves
-      } else if (boardData.isPlayer(row, col, this.player)) {
-        console.log("player")
-        return this.possibleMoves
-      }
-    }
-    console.log("all empty")
-    return this.possibleMoves
+    return this.RookMoves(boardData)
   }
 }
 
@@ -195,8 +202,8 @@ export class King extends Piece {
     for (let relativeMove of relativeMoves) {
       let row = this.row + relativeMove[0]
       let col = this.col + relativeMove[1]
-      if (!boardData.isPlayer(row, col, this.player)) {
-        result.push([row, col])
+      if (!boardData.isPlayer(row, col, this.color)) {
+        this.possibleMoves.push([row, col])
       }
     }
     this.possibleMoves
@@ -222,7 +229,7 @@ export class Knight extends Piece {
     for (let relativeMove of relativeMoves) {
       let row = this.row + relativeMove[0]
       let col = this.col + relativeMove[1]
-      if (!boardData.isPlayer(row, col, this.player)) {
+      if (!boardData.isPlayer(row, col, this.color)) {
         this.possibleMoves.push([row, col])
       }
     }
