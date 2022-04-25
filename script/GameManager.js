@@ -1,9 +1,7 @@
 import { King, Knight, Pawn, Piece, Rook, Bishop, Queen } from "./Piece.js"
-import { Table } from "./Table.js"
-import { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN } from "./Table.js"
-
-const WHITE_PLAYER = "white"
-const BLACK_PLAYER = "black"
+import { BoardData, WHITE_PLAYER, BLACK_PLAYER } from "./BoardData.js"
+import { PAWN, ROOK, KNIGHT, BISHOP, KING, QUEEN } from "./BoardData.js"
+import { boardData } from "./app.js"
 
 export class GameManager {
   constructor() {
@@ -75,12 +73,12 @@ export class GameManager {
     this.blackKing = this.blackPieces.find((p) => p.type === "k")
   }
 
-  render() {
-    this.blackPieces.forEach((piece) => {
-      piece.render()
-    })
-    this.whitePieces.forEach((piece) => {
-      piece.render()
-    })
-  }
+  // render() {
+  //   this.blackPieces.forEach((piece) => {
+  //     piece.render()
+  //   })
+  //   this.whitePieces.forEach((piece) => {
+  //     piece.render()
+  //   })
+  // }
 }
