@@ -13,8 +13,10 @@ export const BISHOP = "bishop"
 export const KING = "king"
 export const QUEEN = "queen"
 
+const CHESS_BOARD_ID = "chess-board"
+
 let table
-let selectedCell
+let selectedPiece
 
 export class BoardData {
   constructor(pieces) {
@@ -51,13 +53,20 @@ export class BoardData {
     }
   }
 
-  getCell(index) {
-    return this.cells[index]
-  }
-
-  getCell(row, col) {
-    let index = row * 8 + col
-    return this.cells[index]
+  tryMove(piece, row, col) {
+    const possibleMoves = piece.getPossibleMoves(boardData)
+    // possibleMoves looks like this: [[1,2], [3,2]]
+    for (const possibleMove of possibleMoves) {
+      // possibleMove looks like this: [1,2]
+      if (possibleMove[0] === row && possibleMove[1] === col) {
+        // There is a legal move
+        boardData.removePiece(row, col)
+        piece.row = row
+        piece.col = col
+        return true
+      }
+    }
+    return false
   }
 
   isEmpty(row, col) {
@@ -69,16 +78,17 @@ export class BoardData {
     return piece !== undefined && piece.color === color
   }
 
-  onCellClick(event, row, col) {
+  tryUpdateSelectedPiece(row, col) {
     // Clear all previous possible moves
     for (let i = 0; i < BOARD_SIZE; i++) {
       for (let j = 0; j < BOARD_SIZE; j++) {
         table.rows[i].cells[j].classList.remove("possible-move")
+        table.rows[i].cells[j].classList.remove("selected")
       }
     }
 
     // Show possible moves
-    const piece = this.getPiece(row, col)
+    const piece = boardData.getPiece(row, col)
     if (piece !== undefined) {
       let possibleMoves = piece.getPossibleMoves(boardData)
       for (let possibleMove of possibleMoves) {
@@ -87,19 +97,30 @@ export class BoardData {
       }
     }
 
-    // Clear previously selected cell
-    if (selectedCell !== undefined) {
-      selectedCell.classList.remove("selected")
-    }
+    table.rows[row].cells[col].classList.add("selected")
+    selectedPiece = piece
+  }
 
-    // Show selected cell
-    selectedCell = event.currentTarget
-    selectedCell.classList.add("selected")
+  onCellClick(event, row, col) {
+    // selectedPiece - The current selected piece (selected in previous click)
+    // row, col - the currently clicked cell - it may be empty, or have a piece.
+    if (selectedPiece !== undefined && this.tryMove(selectedPiece, row, col)) {
+      selectedPiece = undefined
+      // Recreate whole board - this is not efficient, but doesn't affect user experience
+      this.createChessBoard(boardData)
+    } else {
+      this.tryUpdateSelectedPiece(row, col)
+    }
   }
 
   createChessBoard() {
-    // Create empty chess board HTML:
+    table = document.getElementById(CHESS_BOARD_ID)
+    if (table !== null) {
+      table.remove()
+    }
+
     table = document.createElement("table")
+    table.id = CHESS_BOARD_ID
     document.body.appendChild(table)
     for (let row = 0; row < BOARD_SIZE; row++) {
       const rowElement = table.insertRow()
@@ -118,22 +139,11 @@ export class BoardData {
         )
       }
     }
+  }
 
-    const h1 = document.createElement("h1")
-    h1.innerText = "Chess-Board Game!"
-    document.body.appendChild(h1)
-    h1.classList.add("header")
-
-    const btnReset = document.createElement("button")
-    btnReset.innerText = "Reset"
-    document.body.appendChild(btnReset)
-    btnReset.classList.add("btnReset")
-
-    const btnSwitchPlayer = document.createElement("button")
-    btnSwitchPlayer.innerText = "Switch Players"
-    document.body.appendChild(btnSwitchPlayer)
-    btnSwitchPlayer.classList.add("btnSwitchPlayer")
+  initGame() {
+    // Create list of pieces (32 total)
+    boardData = new BoardData(getInitialPieces())
+    createChessBoard(boardData)
   }
 }
-
-// window.addEventListener("load", createChessBoard)

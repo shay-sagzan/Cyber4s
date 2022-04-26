@@ -9,7 +9,7 @@ table {
 
 .header {
   position: absolute;
-  margin-left: 35%;
+  margin-left: 425px;
   top: 0%;
 }
 
@@ -42,10 +42,8 @@ table {
 }
 
 .btnSwitchPlayer {
-  position: absolute;
-  display: inline-block;
-  margin-top: 10px;
-  margin-left: 5%;
+  /* display: flex; */
+
   border-radius: 10px;
   width: 140px;
   height: 40px;
@@ -54,10 +52,8 @@ table {
 }
 
 .btnReset {
-  position: relative;
-  display: inline-block;
-  margin-top: 10px;
-  margin-left: 39%;
+  /* display: flex; */
+  margin-top: 800px;
   border-radius: 10px;
   width: 120px;
   height: 40px;

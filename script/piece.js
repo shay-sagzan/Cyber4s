@@ -76,14 +76,14 @@ export class Piece {
         this.possibleMoves.push([row, col])
       } else if (boardData.isPlayer(row, col, this.getOpponent())) {
         this.possibleMoves.push([row, col])
-        console.log("opponent")
+        // console.log("opponent")
         return this.possibleMoves
-      } else if (boardData.isPlayer(row, col, this.player)) {
-        console.log("player")
+      } else if (boardData.isPlayer(row, col, this.color)) {
+        // console.log("player")
         return this.possibleMoves
       }
     }
-    console.log("all empty")
+    // console.log("all empty")
     return this.possibleMoves
   }
 
@@ -226,31 +226,24 @@ export class Knight extends Piece {
     super(row, col, color, type, src)
   }
   getKnightMoves(boardData) {
-    this.possibleMoves = []
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(2, 1, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(2, -1, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(-2, 1, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(-2, -1, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(1, 2, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(1, -2, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(-1, 2, boardData)
-    )
-    this.possibleMoves = this.possibleMoves.concat(
-      this.getMovesInDirection(-1, -2, boardData)
-    )
-    return this.possibleMoves
+    let result = []
+    const relativeMoves = [
+      [2, 1],
+      [2, -1],
+      [-2, 1],
+      [-2, -1],
+      [-1, 2],
+      [1, 2],
+      [-1, -2],
+      [1, -2],
+    ]
+    for (let relativeMove of relativeMoves) {
+      let row = this.row + relativeMove[0]
+      let col = this.col + relativeMove[1]
+      if (!boardData.isPlayer(row, col, this.color)) {
+        result.push([row, col])
+      }
+    }
+    return result
   }
 }
