@@ -32,7 +32,7 @@ export class Piece {
   }
 
   getPossibleMoves(boardData) {
-    // Get relative moves
+    // Get moves
     let moves
     if (this.type === PAWN) {
       moves = this.getPawnMoves(boardData)
@@ -68,7 +68,7 @@ export class Piece {
   }
 
   getMovesInDirection(directionRow, directionCol, boardData) {
-    this.possibleMoves
+    this.possibleMoves = []
     for (let i = 1; i < BOARD_SIZE; i++) {
       let row = this.row + directionRow * i
       let col = this.col + directionCol * i
@@ -76,11 +76,14 @@ export class Piece {
         this.possibleMoves.push([row, col])
       } else if (boardData.isPlayer(row, col, this.getOpponent())) {
         this.possibleMoves.push([row, col])
+        console.log("opponent")
         return this.possibleMoves
-      } else if (boardData.isPlayer(row, col, this.color)) {
+      } else if (boardData.isPlayer(row, col, this.player)) {
+        console.log("player")
         return this.possibleMoves
       }
     }
+    console.log("all empty")
     return this.possibleMoves
   }
 
@@ -178,7 +181,8 @@ export class Rook extends Piece {
 
   getRookMoves(boardData) {
     this.possibleMoves = []
-    return this.RookMoves(boardData)
+    this.possibleMoves = this.RookMoves(boardData)
+    return this.possibleMoves
   }
 }
 
@@ -189,24 +193,31 @@ export class King extends Piece {
 
   getKingMoves(boardData) {
     this.possibleMoves = []
-    const relativeMoves = [
-      [-1, -1],
-      [-1, 0],
-      [-1, 1],
-      [0, -1],
-      [0, 1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-    ]
-    for (let relativeMove of relativeMoves) {
-      let row = this.row + relativeMove[0]
-      let col = this.col + relativeMove[1]
-      if (!boardData.isPlayer(row, col, this.color)) {
-        this.possibleMoves.push([row, col])
-      }
-    }
-    this.possibleMoves
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(1, 0, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-1, 0, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(0, 1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(0, -1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(1, 1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(1, -1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-1, 1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-1, -1, boardData)
+    )
+    return this.possibleMoves
   }
 }
 
@@ -216,23 +227,30 @@ export class Knight extends Piece {
   }
   getKnightMoves(boardData) {
     this.possibleMoves = []
-    const relativeMoves = [
-      [2, 1],
-      [2, -1],
-      [-2, 1],
-      [-2, -1],
-      [-1, 2],
-      [1, 2],
-      [-1, -2],
-      [1, -2],
-    ]
-    for (let relativeMove of relativeMoves) {
-      let row = this.row + relativeMove[0]
-      let col = this.col + relativeMove[1]
-      if (!boardData.isPlayer(row, col, this.color)) {
-        this.possibleMoves.push([row, col])
-      }
-    }
-    this.possibleMoves
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(2, 1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(2, -1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-2, 1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-2, -1, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(1, 2, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(1, -2, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-1, 2, boardData)
+    )
+    this.possibleMoves = this.possibleMoves.concat(
+      this.getMovesInDirection(-1, -2, boardData)
+    )
+    return this.possibleMoves
   }
 }

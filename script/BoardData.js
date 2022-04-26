@@ -23,10 +23,30 @@ export class BoardData {
     this.createChessBoard()
   }
 
+  clearBoard(table) {
+    for (let i = 0; i < BOARD_SIZE; i++) {
+      // clear all signs
+      for (let j = 0; j < BOARD_SIZE; j++) {
+        table.rows[i].cells[j].classList.remove("possible-move")
+        table.rows[i].cells[j].classList.remove("selected")
+      }
+    }
+  }
+
   getPiece(row, col) {
     for (const piece of this.pieces) {
       if (piece.row === row && piece.col === col) {
         return piece
+      }
+    }
+  }
+
+  removePiece(row, col) {
+    for (let i = 0; i < this.pieces.length; i++) {
+      const piece = this.pieces[i]
+      if (piece.row === row && piece.col === col) {
+        // Remove piece at index i
+        this.pieces.splice(i, 1)
       }
     }
   }
