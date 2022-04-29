@@ -67,11 +67,6 @@ table {
   width: 300px;
 }
 
-/* .buttons {
-  display: flex;
-  justify-content: space-between;
-} */
-
 .checkPos {
   margin: 50px;
   background-color: red;
@@ -80,4 +75,17 @@ table {
   height: 70px;
   justify-content: center;
   align-items: center;
+}
+
+.reset-btn {
+  display: flex;
+  position: absolute;
+  margin-top: 375;
+  margin-left: 180px;
+  background: chartreuse;
+  border-radius: 115px;
+  width: 100;
+  justify-content: center;
+  align-items: center;
+  height: 25;
 }

@@ -15,6 +15,19 @@ class BoardData {
     }
   }
 
+  newBoard() {
+    // Create list of pieces (32 total)
+    this.pieces = []
+
+    for (let i = 0; i < BOARD_SIZE; i++) {
+      this.pieces.push(new Piece(0, i, PIECES[i], WHITE_PLAYER))
+      this.pieces.push(new Piece(1, i, PAWN, WHITE_PLAYER))
+      this.pieces.push(new Piece(6, i, PAWN, BLACK_PLAYER))
+      this.pieces.push(new Piece(7, i, PIECES[i], BLACK_PLAYER))
+    }
+    return this.pieces
+  }
+
   // Returns piece in row, col, or undefined if not exists.
   getPiece(row, col) {
     for (const piece of this.pieces) {
@@ -24,19 +37,7 @@ class BoardData {
     }
   }
 
-  addEatenPieceToSide(typeEaten, playerEaten) {
-    let tempEatenPieceB = document.querySelector(".eatenBlackPieces")
-    let tempEatenPieceW = document.querySelector(".eatenWhitePieces")
-    if (playerEaten === BLACK_PLAYER) {
-      let newImgB = app.addImage(typeEaten.getPiece, BLACK_PLAYER, typeEaten)
-      tempEatenPieceB.appendChild(newImgB)
-    } else {
-      let newImgW = app.addImage(typeEaten.getPiece, WHITE_PLAYER, typeEaten)
-      tempEatenPieceW.appendChild(newImgW)
-    }
-
-    // console.log(tempEatenPiece)
-  }
+  addEatenPieceToSide() {}
 
   removePiece(row, col) {
     let typeEaten
@@ -52,7 +53,6 @@ class BoardData {
           this.addEatenPieceToSide(typeEaten, playerEaten)
         }
         if (oldPiece === false) {
-          // this.addEatenPieceToSide(oldPiece)
           typeEaten = this.getPiece(piece.row, piece.col).type
           playerEaten = this.isPlayer(piece.row, piece.col, BLACK_PLAYER)
           // console.log(playerEaten)

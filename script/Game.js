@@ -12,7 +12,7 @@ class Game {
         // There is a legal move
   */
   tryMove(piece, row, col) {
-    const possibleMoves = this.myFunc(piece)
+    const possibleMoves = this.getPossibleMoves(piece)
     for (const possibleMove of possibleMoves) {
       if (possibleMove[0] === row && possibleMove[1] === col) {
         const removedPiece = this.boardData.removePiece(row, col)
@@ -38,7 +38,7 @@ class Game {
     return false
   }
 
-  myFunc(piece) {
+  getPossibleMoves(piece) {
     if (this.currentPlayer !== piece.player || this.winner !== undefined) {
       return []
     }
