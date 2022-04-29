@@ -108,21 +108,6 @@ function addImage(cell, player, name) {
 }
 
 function createChessBoard(boardData) {
-  const header = document.createElement("h1")
-  header.classList.add("header")
-  header.textContent = "Chess-Game!"
-  document.body.appendChild(header)
-
-  const eatenWhitePieces = document.createElement("h3")
-  eatenWhitePieces.classList.add("eatenWhitePieces")
-  eatenWhitePieces.textContent = "White Piece Eaten!"
-  document.body.appendChild(eatenWhitePieces)
-
-  const eatenBlackPieces = document.createElement("h3")
-  eatenBlackPieces.classList.add("eatenBlackPieces")
-  eatenBlackPieces.textContent = "Black Piece Eaten!"
-  document.body.appendChild(eatenBlackPieces)
-
   table = document.getElementById(CHESS_BOARD_ID)
   if (table !== null) {
     table.remove()
@@ -162,6 +147,20 @@ function createChessBoard(boardData) {
 }
 
 function initGame() {
+  const header = document.createElement("h1")
+  header.classList.add("header")
+  header.textContent = "Chess-Game!"
+  document.body.appendChild(header)
+
+  const eatenWhitePieces = document.createElement("h3")
+  eatenWhitePieces.classList.add("eatenWhitePieces")
+  eatenWhitePieces.textContent = "White Piece Eaten!"
+  document.body.appendChild(eatenWhitePieces)
+
+  const eatenBlackPieces = document.createElement("h3")
+  eatenBlackPieces.classList.add("eatenBlackPieces")
+  eatenBlackPieces.textContent = "Black Piece Eaten!"
+  document.body.appendChild(eatenBlackPieces)
   game = new Game(WHITE_PLAYER)
   createChessBoard(game.boardData)
 }

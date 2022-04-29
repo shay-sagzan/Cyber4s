@@ -54,7 +54,7 @@ table {
   float: left;
   width: 300px;
   justify-content: center;
-  background-color: rgba(128, 128, 128, 0.292);
+  background-color: rgba(128, 128, 128, 0.2);
   height: 200px;
 }
 
@@ -62,7 +62,7 @@ table {
   float: right;
   display: flex;
   justify-content: center;
-  background-color: rgba(128, 128, 128, 0.292);
+  background-color: rgba(128, 128, 128, 0.2);
   height: 200px;
   width: 300px;
 }
