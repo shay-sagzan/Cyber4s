@@ -24,10 +24,40 @@ class BoardData {
     }
   }
 
+  addEatenPieceToSide(typeEaten, playerEaten) {
+    let tempEatenPieceB = document.querySelector(".eatenBlackPieces")
+    let tempEatenPieceW = document.querySelector(".eatenWhitePieces")
+    if (playerEaten === BLACK_PLAYER) {
+      let newImgB = app.addImage(typeEaten.getPiece, BLACK_PLAYER, typeEaten)
+      tempEatenPieceB.appendChild(newImgB)
+    } else {
+      let newImgW = app.addImage(typeEaten.getPiece, WHITE_PLAYER, typeEaten)
+      tempEatenPieceW.appendChild(newImgW)
+    }
+
+    // console.log(tempEatenPiece)
+  }
+
   removePiece(row, col) {
+    let typeEaten
+    let playerEaten
+    let oldPiece = this.isPlayer(row, col, BLACK_PLAYER)
     for (let i = 0; i < this.pieces.length; i++) {
       const piece = this.pieces[i]
       if (piece.row === row && piece.col === col) {
+        if (oldPiece === true) {
+          typeEaten = this.getPiece(piece.row, piece.col).type
+          playerEaten = this.isPlayer(piece.row, piece.col, BLACK_PLAYER)
+          // console.log(playerEaten)
+          this.addEatenPieceToSide(typeEaten, playerEaten)
+        }
+        if (oldPiece === false) {
+          // this.addEatenPieceToSide(oldPiece)
+          typeEaten = this.getPiece(piece.row, piece.col).type
+          playerEaten = this.isPlayer(piece.row, piece.col, BLACK_PLAYER)
+          // console.log(playerEaten)
+          this.addEatenPieceToSide(typeEaten, playerEaten)
+        }
         // Remove piece at index i
         this.pieces.splice(i, 1)
         return piece

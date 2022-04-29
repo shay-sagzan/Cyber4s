@@ -16,6 +16,8 @@ const CHESS_BOARD_ID = "chess-board"
 let game
 let table
 let selectedPiece
+let eatenBlackPieces
+let eatenWhitePieces
 
 function tryUpdateSelectedPiece(row, col) {
   // Clear all previous possible moves
@@ -152,15 +154,42 @@ function initGame() {
   header.textContent = "Chess-Game!"
   document.body.appendChild(header)
 
-  const eatenWhitePieces = document.createElement("h3")
+  eatenWhitePieces = document.createElement("table")
   eatenWhitePieces.classList.add("eatenWhitePieces")
-  eatenWhitePieces.textContent = "White Piece Eaten!"
   document.body.appendChild(eatenWhitePieces)
+  let subHeaderWhite = document.createElement("h3")
+  subHeaderWhite.textContent = "White Piece Eaten!"
+  eatenWhitePieces.appendChild(subHeaderWhite)
+  for (let row = 0; row < 2; row++) {
+    const rowEatenWhite = eatenWhitePieces.insertRow()
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      const colEatenWhite = rowEatenWhite.insertCell()
+    }
+  }
 
-  const eatenBlackPieces = document.createElement("h3")
+  eatenBlackPieces = document.createElement("table")
   eatenBlackPieces.classList.add("eatenBlackPieces")
-  eatenBlackPieces.textContent = "Black Piece Eaten!"
   document.body.appendChild(eatenBlackPieces)
+  let subHeaderBlack = document.createElement("h3")
+  subHeaderBlack.textContent = "Black Piece Eaten!"
+  eatenBlackPieces.appendChild(subHeaderBlack)
+  for (let row = 0; row < 2; row++) {
+    const rowEatenBlack = eatenBlackPieces.insertRow()
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      const colEatenBlack = rowEatenBlack.insertCell()
+    }
+  }
+
+  // const eatenWhitePieces = document.createElement("table")
+  // eatenWhitePieces.classList.add("eatenWhitePieces")
+  // eatenWhitePieces.textContent = "White Piece Eaten!"
+  // document.body.appendChild(eatenWhitePieces)
+
+  // eatenBlackPieces = document.createElement("table")
+  // eatenBlackPieces.classList.add("eatenBlackPieces")
+  // eatenBlackPieces.textContent = "Black Piece Eaten!"
+  // document.body.appendChild(eatenBlackPieces)
+
   game = new Game(WHITE_PLAYER)
   createChessBoard(game.boardData)
 }
