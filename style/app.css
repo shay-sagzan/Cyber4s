@@ -1,7 +1,15 @@
-table {
+body {
   position: relative;
-  margin: auto;
-  border: 20px solid rgba(197, 110, 11, 0.914);
+  display: flexbox;
+}
+
+table {
+  margin-left: revert;
+  display: flex;
+  /* border: 20px solid rgba(197, 110, 11, 0.914); */
+  /* align-content: stretch; */
+  flex-direction: row;
+  justify-content: center;
 }
 
 .light-cell {
@@ -43,22 +51,33 @@ table {
 
 .eatenWhitePieces {
   display: flex;
-  margin: 50px;
+  float: left;
+  width: 300px;
   justify-content: center;
   background-color: rgba(128, 128, 128, 0.292);
-  width: 400px;
   height: 200px;
 }
 
 .eatenBlackPieces {
+  float: right;
   display: flex;
   justify-content: center;
-  margin: 50px;
   background-color: rgba(128, 128, 128, 0.292);
-  width: 400px;
   height: 200px;
+  width: 300px;
 }
 
-.buttons {
+/* .buttons {
   display: flex;
+  justify-content: space-between;
+} */
+
+.checkPos {
+  margin: 50px;
+  background-color: red;
+  display: flex;
+  width: 70px;
+  height: 70px;
+  justify-content: center;
+  align-items: center;
 }

@@ -47,8 +47,55 @@ function onCellClick(row, col) {
     selectedPiece = undefined
     // Recreate whole board - this is not efficient, but doesn't affect user experience
     createChessBoard(game.boardData)
+    if (game.endOfTheGame() === false) checkIfCheck()
   } else {
     tryUpdateSelectedPiece(row, col)
+  }
+}
+
+/*
+  this function check if there is a check on the king.
+  the function find the pieces of the previous player has on the board,
+  she get array of possible moves for each soldier who played last,
+  and find the oponnent King's Location(row, col).
+  Then, she check if one of the possible moves of the last player is Check.
+*/
+function checkIfCheck() {
+  let piecesPreviousPlayer = []
+  for (let piece of game.boardData.pieces) {
+    if (piece.getOpponent() === game.currentPlayer) {
+      piecesPreviousPlayer.push(piece)
+    }
+  }
+
+  let possiblePlayerMoves = []
+  for (let piece of piecesPreviousPlayer) {
+    possiblePlayerMoves = possiblePlayerMoves.concat(
+      piece.getPossibleMoves(game.boardData)
+    )
+  }
+
+  let kingCell
+  for (let opponentCell of game.boardData.pieces) {
+    if (
+      opponentCell.type === KING &&
+      opponentCell.player === game.currentPlayer
+    ) {
+      kingCell = [opponentCell.row, opponentCell.col]
+    }
+  }
+
+  for (let i = 0; i < possiblePlayerMoves.length; i++) {
+    if (
+      possiblePlayerMoves[i][0] === kingCell[0] &&
+      possiblePlayerMoves[i][1] === kingCell[1]
+    ) {
+      const check = document.createElement("h3")
+      check.classList.add("checkPos")
+      check.textContent = "Check!"
+      document.body.appendChild(check)
+      return true
+    }
   }
 }
 
@@ -61,6 +108,21 @@ function addImage(cell, player, name) {
 }
 
 function createChessBoard(boardData) {
+  const header = document.createElement("h1")
+  header.classList.add("header")
+  header.textContent = "Chess-Game!"
+  document.body.appendChild(header)
+
+  const eatenWhitePieces = document.createElement("h3")
+  eatenWhitePieces.classList.add("eatenWhitePieces")
+  eatenWhitePieces.textContent = "White Piece Eaten!"
+  document.body.appendChild(eatenWhitePieces)
+
+  const eatenBlackPieces = document.createElement("h3")
+  eatenBlackPieces.classList.add("eatenBlackPieces")
+  eatenBlackPieces.textContent = "Black Piece Eaten!"
+  document.body.appendChild(eatenBlackPieces)
+
   table = document.getElementById(CHESS_BOARD_ID)
   if (table !== null) {
     table.remove()
