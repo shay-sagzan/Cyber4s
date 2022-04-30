@@ -5,7 +5,6 @@ class Piece {
     this.type = type
     this.player = player
   }
-  asdas
 
   /**
    * @function getOpponent

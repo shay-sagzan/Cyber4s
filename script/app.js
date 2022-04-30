@@ -19,6 +19,7 @@ let resetBtn
 let selectedPiece
 let eatenBlackPieces
 let eatenWhitePieces
+let checkDiv
 
 /**
  * @function tryUpdateSelectedPiece
@@ -61,6 +62,7 @@ function onCellClick(row, col) {
   // row, col - the currently clicked cell - it may be empty, or have a piece
   if (selectedPiece !== undefined && game.tryMove(selectedPiece, row, col)) {
     selectedPiece = undefined
+    checkDiv.style.visibility = "hidden"
     // Recreate whole board - this is not efficient, but doesn't affect user experience
     createChessBoard(game.boardData)
     if (game.endOfTheGame() === false) checkIfCheck()
@@ -68,7 +70,6 @@ function onCellClick(row, col) {
     tryUpdateSelectedPiece(row, col)
   }
 }
-
 /**
  * @function checkIfCheck
  * The function check if there is a check on the king
@@ -76,6 +77,7 @@ function onCellClick(row, col) {
  * true if CHECK
  */
 function checkIfCheck() {
+  // Find the pieces the previous player has on the board:
   let piecesPreviousPlayer = []
   for (let piece of game.boardData.pieces) {
     if (piece.getOpponent() === game.currentPlayer) {
@@ -83,32 +85,29 @@ function checkIfCheck() {
     }
   }
 
-  let possiblePlayerMoves = []
+  // Get an array of possible moves of each soldier of the player who played last:
+  let possibleMovesNextTurn = []
   for (let piece of piecesPreviousPlayer) {
-    possiblePlayerMoves = possiblePlayerMoves.concat(
+    possibleMovesNextTurn = possibleMovesNextTurn.concat(
       piece.getPossibleMoves(game.boardData)
     )
   }
 
-  let kingCell
-  for (let opponentCell of game.boardData.pieces) {
-    if (
-      opponentCell.type === KING &&
-      opponentCell.player === game.currentPlayer
-    ) {
-      kingCell = [opponentCell.row, opponentCell.col]
+  // Finding the oponnent King's Location(row, col) - like this : [0, 3]
+  let kingPos
+  for (let piece of game.boardData.pieces) {
+    if (piece.type === KING && piece.player === game.currentPlayer) {
+      kingPos = [piece.row, piece.col]
     }
   }
 
-  for (let i = 0; i < possiblePlayerMoves.length; i++) {
+  // Check if one of the next cells that the last player can advance to is the King's cell:
+  for (let i = 0; i < possibleMovesNextTurn.length; i++) {
     if (
-      possiblePlayerMoves[i][0] === kingCell[0] &&
-      possiblePlayerMoves[i][1] === kingCell[1]
+      possibleMovesNextTurn[i][0] === kingPos[0] &&
+      possibleMovesNextTurn[i][1] === kingPos[1]
     ) {
-      const check = document.createElement("h3")
-      check.classList.add("checkPos")
-      check.textContent = "Check!"
-      document.body.appendChild(check)
+      checkDiv.style.visibility = "visible"
       return true
     }
   }
@@ -204,6 +203,12 @@ function initGame() {
   resetBtn.classList.add("reset-btn")
   document.body.appendChild(resetBtn)
   resetBtn.textContent = "Reset Game"
+
+  checkDiv = document.createElement("div")
+  checkDiv.classList.add("checkPos")
+  checkDiv.textContent = "Check!"
+  document.body.appendChild(checkDiv)
+  checkDiv.style.visibility = "hidden"
 
   resetBtn.addEventListener("click", function () {
     table.remove()
