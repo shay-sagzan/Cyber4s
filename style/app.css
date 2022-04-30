@@ -50,29 +50,30 @@ table {
 }
 
 .eatenWhitePieces {
-  display: flex;
-  float: left;
-  width: 300px;
-  justify-content: center;
+  display: inline-block;
   background-color: rgba(128, 128, 128, 0.2);
   height: 200px;
+  width: 300px;
+  text-align: center;
+  float: left;
 }
 
 .eatenBlackPieces {
-  float: right;
-  display: flex;
-  justify-content: center;
+  display: inline-block;
   background-color: rgba(128, 128, 128, 0.2);
   height: 200px;
   width: 300px;
+  text-align: center;
+  float: right;
 }
 
 .checkPos {
-  margin: 50px;
+  float: right;
+  margin-right: 460px;
   background-color: red;
   display: flex;
-  width: 70px;
-  height: 70px;
+  width: 80;
+  height: 50px;
   justify-content: center;
   align-items: center;
 }
@@ -80,12 +81,28 @@ table {
 .reset-btn {
   display: flex;
   position: absolute;
-  margin-top: 375;
+  margin-top: 372px;
   margin-left: 180px;
   background: chartreuse;
   border-radius: 115px;
-  width: 100;
+  width: 100px;
   justify-content: center;
   align-items: center;
-  height: 25;
+  height: 25px;
+}
+
+.sub-header {
+  height: 30px;
+}
+
+.black-eaten-img {
+  width: 30px;
+  height: 30px;
+  justify-items: inherit;
+  display: inline-block;
+}
+
+.white-eaten-img {
+  width: 30px;
+  height: 30px;
 }

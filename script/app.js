@@ -159,6 +159,7 @@ function initGame() {
   eatenWhitePieces.classList.add("eatenWhitePieces")
   document.body.appendChild(eatenWhitePieces)
   let subHeaderWhite = document.createElement("h3")
+  subHeaderWhite.classList.add("sub-header")
   subHeaderWhite.textContent = "White Piece Eaten!"
   eatenWhitePieces.appendChild(subHeaderWhite)
 
@@ -166,6 +167,7 @@ function initGame() {
   eatenBlackPieces.classList.add("eatenBlackPieces")
   document.body.appendChild(eatenBlackPieces)
   let subHeaderBlack = document.createElement("h3")
+  subHeaderBlack.classList.add("sub-header")
   subHeaderBlack.textContent = "Black Piece Eaten!"
   eatenBlackPieces.appendChild(subHeaderBlack)
 
