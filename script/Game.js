@@ -5,12 +5,15 @@ class Game {
     this.winner = undefined
   }
 
-  /*
-    // Tries to actually make a move. Returns true if successful.
-        // possibleMoves looks like this: [[1,2], [3,2]]
-      // possibleMove looks like this: [1,2]
-        // There is a legal move
-  */
+  /**
+   * @function tryMove
+   * The function tries to make a move. Check for possible moves, check if CHECK, etc
+   * @param piece - the given piece
+   * @param row - the given row
+   * @param col - the given col
+   * @returns
+   * True if move is successful, Otherwise - false
+   */
   tryMove(piece, row, col) {
     const possibleMoves = this.getPossibleMoves(piece)
     for (const possibleMove of possibleMoves) {
@@ -38,6 +41,13 @@ class Game {
     return false
   }
 
+  /**
+   * @function getPossibleMoves
+   * The function checking which player's turn or if there is a winner
+   * @param piece - the given piece
+   * @returns
+   * empty array (non-functionality) if one of the conditions is true, otherwise - get the possible move
+   */
   getPossibleMoves(piece) {
     if (this.currentPlayer !== piece.player || this.winner !== undefined) {
       return []
@@ -45,6 +55,12 @@ class Game {
     return piece.getPossibleMoves(this.boardData)
   }
 
+  /**
+   * @function endOfTheGame
+   * The function checking if there is a winner to the game
+   * @returns
+   * If there is a winner she return true with pop-up. Otherwise - false
+   */
   endOfTheGame() {
     if (game.winner !== undefined) {
       const winnerPopup = document.createElement("div")

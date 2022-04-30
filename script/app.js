@@ -1,3 +1,4 @@
+//Variables declaration
 const BOARD_SIZE = 8
 const WHITE_PLAYER = "white"
 const BLACK_PLAYER = "black"
@@ -10,7 +11,6 @@ const KING = "king"
 const QUEEN = "queen"
 
 const PIECES = [ROOK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROOK]
-
 const CHESS_BOARD_ID = "chess-board"
 
 let game
@@ -20,6 +20,13 @@ let selectedPiece
 let eatenBlackPieces
 let eatenWhitePieces
 
+/**
+ * @function tryUpdateSelectedPiece
+ * The function clears all the previous classList after element movement and
+ * try to update the next selected piece
+ * @param row
+ * @param col
+ */
 function tryUpdateSelectedPiece(row, col) {
   // Clear all previous possible moves
   for (let i = 0; i < BOARD_SIZE; i++) {
@@ -43,9 +50,15 @@ function tryUpdateSelectedPiece(row, col) {
   selectedPiece = piece
 }
 
+/**
+ * @function onCellClick
+ * The function mark cell by "click", the function is significant to play chess
+ * @param row
+ * @param col
+ */
 function onCellClick(row, col) {
   // selectedPiece - The current selected piece (selected in previous click)
-  // row, col - the currently clicked cell - it may be empty, or have a piece.
+  // row, col - the currently clicked cell - it may be empty, or have a piece
   if (selectedPiece !== undefined && game.tryMove(selectedPiece, row, col)) {
     selectedPiece = undefined
     // Recreate whole board - this is not efficient, but doesn't affect user experience
@@ -56,13 +69,12 @@ function onCellClick(row, col) {
   }
 }
 
-/*
-  this function check if there is a check on the king.
-  the function find the pieces of the previous player has on the board,
-  she get array of possible moves for each soldier who played last,
-  and find the oponnent King's Location(row, col).
-  Then, she check if one of the possible moves of the last player is Check.
-*/
+/**
+ * @function checkIfCheck
+ * The function check if there is a check on the king
+ * @returns
+ * true if CHECK
+ */
 function checkIfCheck() {
   let piecesPreviousPlayer = []
   for (let piece of game.boardData.pieces) {
@@ -102,7 +114,13 @@ function checkIfCheck() {
   }
 }
 
-// Adds an image to cell with the piece's image
+/**
+ * @function addImage
+ * The function adds an image to cell with the piece's image
+ * @param cell
+ * @param player
+ * @param name
+ */
 function addImage(cell, player, name) {
   const image = document.createElement("img")
   image.src = "images/" + player + "/" + name + ".png"
@@ -110,6 +128,13 @@ function addImage(cell, player, name) {
   cell.appendChild(image)
 }
 
+/**
+ * @function createChessBoard
+ * The function get mark the table by the ID and remove it
+ * if !== null, then, the function create the board 8*8 and
+ * add the images to relevant cells
+ * @param boardData
+ */
 function createChessBoard(boardData) {
   table = document.getElementById(CHESS_BOARD_ID)
   if (table !== null) {
@@ -141,7 +166,6 @@ function createChessBoard(boardData) {
 
   if (game.winner !== undefined) {
     const winnerPopup = document.createElement("div")
-    // black -> B + lack -> Black
     const winner = game.winner.charAt(0).toUpperCase() + game.winner.slice(1)
     winnerPopup.textContent = winner + " player wins!"
     winnerPopup.classList.add("winner-dialog")
@@ -149,6 +173,11 @@ function createChessBoard(boardData) {
   }
 }
 
+/**
+ * @function initGame
+ * The function init the game and create the chessboard table
+ * also create the header, eaten divs and reset button
+ */
 function initGame() {
   const header = document.createElement("h1")
   header.classList.add("header")
