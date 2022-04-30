@@ -5,7 +5,14 @@ class Piece {
     this.type = type
     this.player = player
   }
+  asdas
 
+  /**
+   * @function getOpponent
+   * The function check if player in specific cell is opponent
+   * @returns
+   * The opponent player color
+   */
   getOpponent() {
     if (this.player === WHITE_PLAYER) {
       return BLACK_PLAYER
@@ -13,8 +20,16 @@ class Piece {
     return WHITE_PLAYER
   }
 
+  /**
+   * @function getPossibleMoves
+   * The function check what is the possible move of every piece in the table according
+   * to the type of the piece
+   * !!! that explanation is relevant for all the next functions !!!
+   * @param boardData - the given board data from the table
+   * @returns
+   * The filtered moves for selected element
+   */
   getPossibleMoves(boardData) {
-    // Get moves
     let moves
     if (this.type === PAWN) {
       moves = this.getPawnMoves(boardData)
